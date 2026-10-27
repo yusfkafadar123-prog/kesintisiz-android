@@ -1,0 +1,38 @@
+name: Build KESINTISIZ APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Unzip Android project
+        run: |
+          unzip KESINTISIZ_v0_1_Android_Starter.zip -d source
+          cp -r source/KESINTISIZ_v0_1_Android_Starter/. .
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build APK
+        run: |
+          chmod +x gradlew || true
+          gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: KESINTISIZ-debug-APK
+          path: app/build/outputs/apk/debug/*.apk
+          
