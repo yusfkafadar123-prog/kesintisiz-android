@@ -26,6 +26,9 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
+
       - name: Extract project
         run: |
           unzip KESINTISIZ_v0_1_Android_Starter.zip -d source
@@ -34,6 +37,7 @@ jobs:
       - name: Build APK
         run: |
           PROJECT_DIR=$(dirname "$(find source -name settings.gradle.kts -print -quit)")
+          echo "Project directory: $PROJECT_DIR"
           gradle -p "$PROJECT_DIR" assembleDebug
 
       - name: Save APK
@@ -42,4 +46,3 @@ jobs:
           name: KESINTISIZ-debug-APK
           path: source/**/build/outputs/apk/debug/*.apk
           if-no-files-found: error
-          
