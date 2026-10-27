@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Get source
@@ -25,6 +25,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses
@@ -37,6 +39,7 @@ jobs:
       - name: Build APK
         run: |
           PROJECT_DIR=$(dirname "$(find source -name settings.gradle.kts -print -quit)")
+          test -n "$PROJECT_DIR"
           echo "Project directory: $PROJECT_DIR"
           gradle -p "$PROJECT_DIR" assembleDebug
 
