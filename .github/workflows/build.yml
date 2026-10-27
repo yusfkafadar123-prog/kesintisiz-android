@@ -36,6 +36,10 @@ jobs:
           unzip KESINTISIZ_v0_1_Android_Starter.zip -d source
           find source -name settings.gradle.kts
 
+      - name: Fix Java reserved word in Kotlin sources
+        run: |
+          find source -type f -name '*.kt' -print0 | xargs -0 sed -i 's/\bcase\b/caseEntity/g'
+
       - name: Build APK
         run: |
           PROJECT_DIR=$(dirname "$(find source -name settings.gradle.kts -print -quit)")
@@ -49,3 +53,4 @@ jobs:
           name: KESINTISIZ-debug-APK
           path: source/**/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+          
